@@ -1,24 +1,65 @@
-/**
- * Gets a random multiplication, division, subtraction or addition question
- * 
- * @returns {} The randomly generated math question
- */
-function getQuestion() {
+const MathOperators = {
+    Multiplication: "x",
+    Division: "/",
+    Subtraction: "-",
+    Addition: "+",
+};
 
+function generateQuestion() {
+    const operators = Object.values(MathOperators);
+    const num1 = getRandomNumber(1, 10);
+    const num2 = getRandomNumber(1, 10);
+    const operator = operators[getRandomNumber(0, operators.length - 1)];
+
+    let questionString = `${num1} ${operator} ${num2}`;
+    
+    return {
+        question: questionString,
+        num1: num1,
+        num2: num2,
+        MathQuestion: operator
+    };
+}
+
+
+function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 /**
- * Parses the provided question and gets whether or not the provided answer is correct
+ * Checks if the provided answer is correct based on the question
  * 
- * @param {*} question The question being answered
- * @param {*} answer The potential answer
- * @returns {boolean} True if the answer was correct, false otherwise.
+ * @param {string} question The question being answered
+ * @param {number} userAnswer The user's answer
+ * @returns {boolean} True if the answer is correct, false otherwise.
  */
-function isCorrectAnswer(question, answer) {
-    return false;
+function checkAnswer(question, userAnswer) {
+    const [num1, operator, num2] = question.split(' ');
+    let correctAnswer;
+
+    switch (operator) {
+        case '+':
+            correctAnswer = parseFloat(num1) + parseFloat(num2);
+            break;
+        case '-':
+            correctAnswer = parseFloat(num1) - parseFloat(num2);
+            break;
+        case 'x':
+            correctAnswer = parseFloat(num1) * parseFloat(num2);
+            break;
+        case '/':
+            correctAnswer = parseFloat(num1) / parseFloat(num2);
+            break;
+        default:
+            return false; 
+    }
+
+    return correctAnswer === parseFloat(userAnswer);
 }
 
 module.exports = {
-    getQuestion,
-    isCorrectAnswer
-}
+    generateQuestion,
+    getRandomNumber,
+    checkAnswer,
+    MathOperators,
+};
